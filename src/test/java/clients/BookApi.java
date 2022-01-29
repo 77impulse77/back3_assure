@@ -21,12 +21,12 @@ public class BookApi {
 
     RequestSpecification session;
 
-    public void setSession (User user){
+    public void setSession(User user) {
         session = new RequestSpecBuilder().build().header("Cookie", "token=" + getToken(user));
 
     }
 
-    public Response deleteBooking (int bookId){
+    public Response deleteBooking(int bookId) {
 
         return given(session)
                 .pathParam("bookingId", bookId)
@@ -35,22 +35,25 @@ public class BookApi {
     }
 
 
-    public Response updateBooking (int bookId, Book book){
+    public Response updateBooking(int bookId, Book book) {
 
-        return given(session)
+
+        Response response = given(session)
+
                 .contentType(ContentType.JSON)
                 .body(book)
 
                 .pathParam("bookingId", bookId)
                 .put("https://restful-booker.herokuapp.com/booking/{bookingId}");
+        JSONObject obj = new JSONObject(response.body().asString());
+        System.out.println(obj);
+        return response;
 
 
     }
 
 
-
-
-    public Response createBooking (Book book){
+    public Response createBooking(Book book) {
         return given()
                 .contentType(ContentType.JSON)
                 .body(book)
@@ -58,9 +61,9 @@ public class BookApi {
 
     }
 
-    public String getToken (User user){
+    public String getToken(User user) {
 
-        String token =  given()
+        String token = given()
                 .contentType(ContentType.JSON)
                 .body(user)
                 .post("https://restful-booker.herokuapp.com/auth")
@@ -76,7 +79,7 @@ public class BookApi {
     }
 
 
-    public void saveId(Response response){
+    public void saveId(Response response) {
 
 
         JSONObject obj = new JSONObject(response.body().asString());
@@ -85,10 +88,9 @@ public class BookApi {
         System.out.println(obj);
 
 
-
     }
 
-    public static int getId(){
+    public static int getId() {
 
         return bookingid;
     }
